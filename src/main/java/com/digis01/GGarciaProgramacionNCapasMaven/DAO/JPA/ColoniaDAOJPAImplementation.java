@@ -4,8 +4,6 @@ import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IColonia;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Result;
 import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Colonia;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,7 +20,7 @@ public class ColoniaDAOJPAImplementation implements IColonia {
     public Result GetAllById(int IdMunicipio) {
         Result result = new Result();
         try {
-            String jpql = "SELECT c FROM ColoniaJPA c WHERE c.municipio.idmunicipio = :idMunicipio";
+            String jpql = "SELECT c FROM Colonia c WHERE c.municipio.idMunicipio = :idMunicipio";
             TypedQuery<Colonia> query = entityManager.createQuery(jpql, Colonia.class);
             query.setParameter("idMunicipio", IdMunicipio);
             List<Colonia> colonias = query.getResultList();
@@ -40,7 +38,7 @@ public class ColoniaDAOJPAImplementation implements IColonia {
     public Result GetByCodigoPostal(String CodigoPostal) {
         Result result = new Result();
         try {
-            String jpql = "Select c FROM ColoniaJPA c WHERE c.codigoPostal = :CodigoPostal";
+            String jpql = "Select c FROM Colonia c WHERE c.codigoPostal = :CodigoPostal";
             TypedQuery<Colonia> query = entityManager.createQuery(jpql, Colonia.class);
             query.setParameter("CodigoPostal", CodigoPostal);
             List<Colonia> colonias = query.getResultList();

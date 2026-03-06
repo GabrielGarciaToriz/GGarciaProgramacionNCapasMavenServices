@@ -21,7 +21,7 @@ public class RolDAOJPAImplementation implements IRol {
     public Result GetAll() {
         Result result = new Result();
         try {
-            TypedQuery<Rol> query = entityManager.createQuery("SELECT r from RolJPA r", Rol.class);
+            TypedQuery<Rol> query = entityManager.createQuery("SELECT r from Rol r", Rol.class);
             result.objects = new ArrayList<>(query.getResultList());
             result.correct = true;
         } catch (Exception e) {
