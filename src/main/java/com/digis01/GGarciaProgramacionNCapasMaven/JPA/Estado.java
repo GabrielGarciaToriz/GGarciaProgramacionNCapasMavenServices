@@ -1,9 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.JPA;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,26 +14,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Direccion")
+@Table(name = "Estado")
 @Getter
 @Setter
 @NoArgsConstructor
-public class DireccionJPA {
+public class Estado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "iddireccion")
-    private int idDireccion;
-    @Column(name = "calle")
-    private String calle;
-    @Column(name = "numeroexterior")
-    private String numeroExterior;
-    @Column(name = "numerointerior")
-    private String numeroInterior;
+    @Column(name = "idestado")
+    private int idEstado;
+    @Column(name = "nombre")
+    private String nombre;
     @ManyToOne
-    @JoinColumn(name = "idcolonia")
-    public ColoniaJPA colonia;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "idusuario")
-    public UsuarioJPA usuario;
+    @JoinColumn(name = "idpais")
+    public Pais pais;
 }

@@ -1,8 +1,8 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IMunicipio;
-import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
-import com.digis01.GGarciaProgramacionNCapasMaven.ML.Municipio;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Municipio;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
@@ -18,7 +18,7 @@ public class MunicipioDAOJPAImplementation implements IMunicipio {
     private EntityManager entityManager;
 
     @Override
-    public Result GetAll(int IdEstado) {
+    public Result GetAllById(int IdEstado) {
         Result result = new Result();
         try {
             StoredProcedureQuery query = entityManager.createStoredProcedureQuery("estadomunicipiobyidsp");

@@ -15,7 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UsuarioJPA {
+public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,9 +45,9 @@ public class UsuarioJPA {
     private Date fechaNacimiento;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idrol")
-    public RolJPA rol;
+    public Rol rol;
     @OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
-    public List<DireccionJPA> direcciones;
+    public List<Direccion> direcciones;
     @Column(name = "estatus")
     private int Estatus;
 }

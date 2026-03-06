@@ -1,8 +1,8 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IColonia;
-import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
-import com.digis01.GGarciaProgramacionNCapasMaven.JPA.ColoniaJPA;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Colonia;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
@@ -19,13 +19,13 @@ public class ColoniaDAOJPAImplementation implements IColonia {
     private EntityManager entityManager;
 
     @Override
-    public Result GetAll(int IdMunicipio) {
+    public Result GetAllById(int IdMunicipio) {
         Result result = new Result();
         try {
             String jpql = "SELECT c FROM ColoniaJPA c WHERE c.municipio.idmunicipio = :idMunicipio";
-            TypedQuery<ColoniaJPA> query = entityManager.createQuery(jpql, ColoniaJPA.class);
+            TypedQuery<Colonia> query = entityManager.createQuery(jpql, Colonia.class);
             query.setParameter("idMunicipio", IdMunicipio);
-            List<ColoniaJPA> colonias = query.getResultList();
+            List<Colonia> colonias = query.getResultList();
             result.objects = new ArrayList<>(colonias);
             result.correct = true;
         } catch (Exception e) {
@@ -41,9 +41,9 @@ public class ColoniaDAOJPAImplementation implements IColonia {
         Result result = new Result();
         try {
             String jpql = "Select c FROM ColoniaJPA c WHERE c.codigoPostal = :CodigoPostal";
-            TypedQuery<ColoniaJPA> query = entityManager.createQuery(jpql, ColoniaJPA.class);
+            TypedQuery<Colonia> query = entityManager.createQuery(jpql, Colonia.class);
             query.setParameter("CodigoPostal", CodigoPostal);
-            List<ColoniaJPA> colonias = query.getResultList();
+            List<Colonia> colonias = query.getResultList();
             result.objects = new ArrayList<>(colonias);
             result.correct = true;
         } catch (Exception e) {

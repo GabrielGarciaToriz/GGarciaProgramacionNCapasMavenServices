@@ -11,17 +11,16 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Pais")
+@Table(name = "Rol")
 @Getter
 @Setter
 @NoArgsConstructor
-public class PaisJPA {
+public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idpais")
-    private int idPais;
-    @Column(name = "nombre")
+    @Column(name = "idrol")
+    private int idRol;
+    @Column(name = "nombrerol")
     private String nombre;
-
 }

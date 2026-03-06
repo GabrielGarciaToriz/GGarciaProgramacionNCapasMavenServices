@@ -1,8 +1,8 @@
 package com.digis01.GGarciaProgramacionNCapasMaven.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMaven.DAO.IPais;
-import com.digis01.GGarciaProgramacionNCapasMaven.ML.Result;
-import com.digis01.GGarciaProgramacionNCapasMaven.JPA.PaisJPA;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Result;
+import com.digis01.GGarciaProgramacionNCapasMaven.JPA.Pais;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
@@ -20,8 +20,8 @@ public class PaisDAOJPAImplementation implements IPais {
     public Result GetAll() {
         Result result = new Result();
         try {
-            TypedQuery<PaisJPA> query = entityManager.createQuery("FROM Pais", PaisJPA.class);
-            List<PaisJPA> paises = query.getResultList();
+            TypedQuery<Pais> query = entityManager.createQuery("FROM Pais", Pais.class);
+            List<Pais> paises = query.getResultList();
             result.objects = new ArrayList<>(paises);
             result.correct = true;
         } catch (Exception e) {

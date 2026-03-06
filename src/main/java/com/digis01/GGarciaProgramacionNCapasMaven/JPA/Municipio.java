@@ -14,21 +14,19 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "Colonia")
+@Table(name = "Municipio")
 @Getter
 @Setter
 @NoArgsConstructor
-public class ColoniaJPA {
+public class Municipio {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idcolonia")
-    private int idColonia;
+    @Column(name = "idmunicipio")
+    private int idMunicipio;
     @Column(name = "nombre")
     private String nombre;
-    @Column(name = "codigopostal")
-    private String codigoPostal;
     @ManyToOne
-    @JoinColumn(name = "idmunicipio")
-    public MunicipioJPA municipio;
+    @JoinColumn(name = "idestado")
+    public Estado estado;
 }
