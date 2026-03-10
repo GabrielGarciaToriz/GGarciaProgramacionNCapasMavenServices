@@ -1,0 +1,13 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Interface.java to edit this template
+ */
+package com.digis01.GGarciaProgramacionNCapasMavenService.DAO;
+
+import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
+
+
+public interface IEstado {
+    Result GetAllById(int IdPais);
+
+}
