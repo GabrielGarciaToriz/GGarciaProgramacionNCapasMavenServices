@@ -22,7 +22,7 @@ public class MunicipioRestController {
             Result result = MunicipioDAOJPA.GetAllById(idEstado);
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects);
+                    return ResponseEntity.ok(result);
 
                 } else {
                     return ResponseEntity.noContent().build();

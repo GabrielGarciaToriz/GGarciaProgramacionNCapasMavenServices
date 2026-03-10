@@ -21,7 +21,7 @@ public class RolRestController {
             Result result = RolDAOJPA.GetAll();
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects);
+                    return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.noContent().build();
                 }

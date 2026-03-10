@@ -19,7 +19,7 @@ public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name="idusuario")
+    @Column(name = "idusuario")
     private int idUsuario;
     @Column(name = "nombre")
     private String nombre;
@@ -43,11 +43,12 @@ public class Usuario {
     private String telefono;
     @Column(name = "fechanacimiento")
     private Date fechaNacimiento;
+    @Column(name = "estatus")
+    private int estatus;
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "idrol")
     public Rol rol;
     @OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)
     public List<Direccion> direcciones;
-    @Column(name = "estatus")
-    private int estatus;
+
 }

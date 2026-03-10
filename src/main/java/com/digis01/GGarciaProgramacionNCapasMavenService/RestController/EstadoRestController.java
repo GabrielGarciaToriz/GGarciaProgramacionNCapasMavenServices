@@ -22,7 +22,7 @@ public class EstadoRestController {
             Result result = EstadoDAOJPA.GetAllById(idPais);
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects);
+                    return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.noContent().build();
                 }

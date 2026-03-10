@@ -22,7 +22,7 @@ public class ColoniaRestController {
             Result result = ColoniaDAOJPA.GetAllById(IdMunicipio);
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects);
+                    return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.noContent().build();
                 }
@@ -40,7 +40,7 @@ public class ColoniaRestController {
             Result result = ColoniaDAOJPA.GetByCodigoPostal(CodigoPostal);
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects);
+                    return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.noContent().build();
                 }

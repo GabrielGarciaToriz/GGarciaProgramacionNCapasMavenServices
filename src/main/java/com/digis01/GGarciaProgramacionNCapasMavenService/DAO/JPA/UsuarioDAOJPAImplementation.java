@@ -9,6 +9,7 @@ import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Pais;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Rol;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
+import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.UsuarioVista;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.ParameterMode;
 import jakarta.persistence.StoredProcedureQuery;
@@ -142,7 +143,29 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
 
     @Override
     public Result UsuarioDireccionBusqueda(Usuario usuario) {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        Result result = new Result();
+        try {
+            String jpql = """
+                         SELECT v FROM UsuarioVista v
+                         WHERE (:nombre IS NULL OR LOWER (v.nombreusuario) LIKE LOWER(CONCAT('%', :nombre ,'%')))
+                         AND (:apellidoPaterno IS NULL OR LOWER (v.apellidoPaterno) LIKE LOWER (CONCAT('%', :apellidoPaterno, '%')))
+                         AND (:apellidoMaterno IS NULL OR LOWER (v.apellidoMaterno) LIKE LOWER (CONCAT('%', :apellidoMaterno, '%')))
+                         AND (:idRol = 0 OR v.idrol = :idRol)
+                         """;
+            TypedQuery<UsuarioVista> query = EntityManager.createQuery(jpql, UsuarioVista.class);
+            query.setParameter("nombre", (usuario.getNombre() != null && !usuario.getNombre().isBlank() ? usuario.getNombre().trim() : ""));
+            query.setParameter("apellidoPaterno", (usuario.getApellidoPaterno() != null && !usuario.getApellidoPaterno().isBlank() ? usuario.getApellidoPaterno() : ""));
+            query.setParameter("apellidoMaterno", (usuario.getApellidoMaterno() != null && !usuario.getApellidoMaterno().isBlank() ? usuario.getApellidoMaterno().trim() : ""));
+            int idRol = (usuario.getRol() != null ? usuario.getRol().getIdRol() : 0);
+            query.setParameter("idRol", idRol);
+            result.objects = new ArrayList<>(query.getResultList());
+            result.correct = true;
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
     }
 
     @Override
@@ -162,20 +185,23 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
     }
 
     @Override
+    @Transactional
     public Result CambiarEstatus(int IdUsuario, int Estatus) {
         Result result = new Result();
         try {
-            StoredProcedureQuery query = EntityManager.createStoredProcedureQuery("cambiarestatussp");
-            query
-                    .registerStoredProcedureParameter(1, Integer.class,
-                            ParameterMode.IN);
-            query
-                    .registerStoredProcedureParameter(2, Integer.class,
-                            ParameterMode.IN);
-            query.setParameter(1, IdUsuario);
-            query.setParameter(2, Estatus);
-            query.execute();
-            result.correct = true;
+            String jpql = "UPDATE Usuario u SET u.estatus = :estatus WHERE u.idUsuario = :idUsuario";
+            int actualizacion = EntityManager.createQuery(jpql)
+                    .setParameter("idUsuario", IdUsuario)
+                    .setParameter("estatus", Estatus)
+                    .executeUpdate();
+
+            if (actualizacion > 0) {
+                result.correct = true;
+            } else {
+                result.correct = false;
+                result.errorMessage = "No se pudo modificar el usuario " + IdUsuario;
+            }
+
         } catch (Exception e) {
             result.correct = false;
             result.errorMessage = e.getLocalizedMessage();

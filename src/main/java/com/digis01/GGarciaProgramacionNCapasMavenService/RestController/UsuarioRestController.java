@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 public class UsuarioRestController {
 
     @Autowired
-    private UsuarioDAOJPAImplementation usuarioDAOJPAImplementation;
+    private UsuarioDAOJPAImplementation usuarioDAOJPA;
 
     @GetMapping()
     public ResponseEntity GetAll() {
         try {
-            Result result = usuarioDAOJPAImplementation.GetAll();
+            Result result = usuarioDAOJPA.GetAll();
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
                     return ResponseEntity.ok(result);
@@ -41,7 +41,7 @@ public class UsuarioRestController {
     @GetMapping("/{idUsuario}")
     public ResponseEntity GetAllById(@PathVariable("idUsuario") int IdUsuario) {
         try {
-            Result result = usuarioDAOJPAImplementation.GetAllById(IdUsuario);
+            Result result = usuarioDAOJPA.GetAllById(IdUsuario);
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
                     return ResponseEntity.ok(result.objects.get(0));
@@ -65,7 +65,7 @@ public class UsuarioRestController {
                     direccion.setUsuario(usuario);
                 }
             }
-            Result result = usuarioDAOJPAImplementation.Add(usuario);
+            Result result = usuarioDAOJPA.Add(usuario);
             if (result.correct) {
                 return ResponseEntity.ok(result);
             } else {
@@ -76,4 +76,37 @@ public class UsuarioRestController {
         }
 
     }
+
+    @PostMapping("/buscar")
+    public ResponseEntity BusquedaUsuarioDireccion(@RequestBody Usuario usuario) {
+        try {
+            Result result = usuarioDAOJPA.UsuarioDireccionBusqueda(usuario);
+            if (result.correct) {
+                if (result.objects != null && !result.objects.isEmpty()) {
+                    return ResponseEntity.ok(result);
+                } else {
+                    return ResponseEntity.noContent().build();
+                }
+            } else {
+                return ResponseEntity.badRequest().body(result.errorMessage);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e);
+        }
+    }
+
+    @PostMapping("/cambioStatus/{idUsuario}/{estatus}")
+    public ResponseEntity CambiarEstatus(@PathVariable("idUsuario") int idUsuario, @PathVariable("estatus") int Estatus) {
+        try {
+            Result result = usuarioDAOJPA.CambiarEstatus(idUsuario, Estatus);
+            if (result.correct) {
+                return ResponseEntity.ok(result);
+            } else {
+                return ResponseEntity.badRequest().body(result.errorMessage);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e.getLocalizedMessage());
+        }
+    }
+
 }

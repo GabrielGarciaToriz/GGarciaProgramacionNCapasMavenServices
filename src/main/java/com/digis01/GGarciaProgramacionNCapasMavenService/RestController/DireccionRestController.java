@@ -26,7 +26,7 @@ public class DireccionRestController {
             Result result = DireccionDAOJPA.DireccionGetAllById(idUsuario);
             if (result.correct) {
                 if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects);
+                    return ResponseEntity.ok(result);
                 } else {
                     return ResponseEntity.noContent().build();
                 }
