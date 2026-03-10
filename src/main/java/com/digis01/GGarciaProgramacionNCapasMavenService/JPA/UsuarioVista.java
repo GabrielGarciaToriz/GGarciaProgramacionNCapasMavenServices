@@ -11,17 +11,18 @@ import lombok.Setter;
 import org.hibernate.annotations.Immutable;
 
 @Entity
-@Table(name = "USUARIODETALLEVIEW")
+@Table(name = "usuariodetalleview")
 @Immutable
 @Getter
 @Setter
 @NoArgsConstructor
 public class UsuarioVista {
+
     @Id
     @Column(name = "idusuario")
-    private int idUsaurio;
+    private Integer idUsaurio;
     @Column(name = "nombreusuario")
-    private String nombreUsaurio;
+    private String nombree;
     @Column(name = "apellidopaterno")
     private String apellidoPaterno;
     @Column(name = "apellidomaterno")
@@ -43,13 +44,13 @@ public class UsuarioVista {
     @Column(name = "telefono")
     private String telefono;
     @Column(name = "esattus")
-    private int estatus;
+    private Integer estatus;
     @Column(name = "idrol")
-    private int idRol;
+    private Integer idRol;
     @Column(name = "rolasignado")
     private String rolAsignado;
     @Column(name = "iddireccion")
-    private int idDireccion;
+    private Integer idDireccion;
     @Column(name = "calle")
     private String calle;
     @Column(name = "numeroexterior")
@@ -57,21 +58,21 @@ public class UsuarioVista {
     @Column(name = "numerointerior")
     private String numeroInterior;
     @Column(name = "idcolonia")
-    private int idColonia;
+    private Integer idColonia;
     @Column(name = "colonia")
     private String colonia;
     @Column(name = "cp")
     private String cp;
     @Column(name = "idmunicipio")
-    private int idMunicipio;
+    private Integer idMunicipio;
     @Column(name = "municipio")
     private String municipio;
     @Column(name = "idestado")
-    private int idEstado;
+    private Integer idEstado;
     @Column(name = "estado")
     private String estado;
     @Column(name = "idpais")
-    private int idPais;
+    private Integer idPais;
     @Column(name = "pais")
     private String Pais;
 }

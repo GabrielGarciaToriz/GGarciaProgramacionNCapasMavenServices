@@ -147,7 +147,7 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
         try {
             String jpql = """
                          SELECT v FROM UsuarioVista v
-                         WHERE (:nombre IS NULL OR LOWER (v.nombreusuario) LIKE LOWER(CONCAT('%', :nombre ,'%')))
+                         WHERE (:nombre IS NULL OR LOWER (v.nombre) LIKE LOWER(CONCAT('%', :nombre ,'%')))
                          AND (:apellidoPaterno IS NULL OR LOWER (v.apellidoPaterno) LIKE LOWER (CONCAT('%', :apellidoPaterno, '%')))
                          AND (:apellidoMaterno IS NULL OR LOWER (v.apellidoMaterno) LIKE LOWER (CONCAT('%', :apellidoMaterno, '%')))
                          AND (:idRol = 0 OR v.idrol = :idRol)
