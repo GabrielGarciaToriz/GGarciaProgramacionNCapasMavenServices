@@ -24,7 +24,7 @@ public class Direccion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "iddireccion")
-    private int idDireccion;
+    private Integer idDireccion;
     @Column(name = "calle")
     private String calle;
     @Column(name = "numeroexterior")

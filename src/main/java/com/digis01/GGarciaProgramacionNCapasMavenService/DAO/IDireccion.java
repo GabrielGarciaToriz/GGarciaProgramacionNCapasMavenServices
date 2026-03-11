@@ -1,4 +1,3 @@
-
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
@@ -11,4 +10,6 @@ public interface IDireccion {
     Result DireccionAdd(Direccion direccion, int IdUsuario);
 
     Result DireccionModify(Direccion direccion, int IdUsuario);
+
+    Result DeleteDireccion(int idDireccion);
 }

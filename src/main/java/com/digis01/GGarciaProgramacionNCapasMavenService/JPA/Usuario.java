@@ -20,7 +20,7 @@ public class Usuario {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idusuario")
-    private int idUsuario;
+    private Integer idUsuario;
     @Column(name = "nombre")
     private String nombre;
     @Column(name = "apellidopaterno")
@@ -45,7 +45,10 @@ public class Usuario {
     private Date fechaNacimiento;
     @Column(name = "estatus")
     private int estatus;
-    @ManyToOne(cascade = CascadeType.ALL)
+    @Lob
+    @Column(name = "imagen")
+    private String imagen;
+    @ManyToOne()
     @JoinColumn(name = "idrol")
     public Rol rol;
     @OneToMany(mappedBy = "usuario", orphanRemoval = true, cascade = CascadeType.ALL)

@@ -3,6 +3,7 @@ package com.digis01.GGarciaProgramacionNCapasMavenService.JPA;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import java.util.Date;
 import lombok.Getter;
@@ -22,7 +23,7 @@ public class UsuarioVista {
     @Column(name = "idusuario")
     private Integer idUsaurio;
     @Column(name = "nombreusuario")
-    private String nombree;
+    private String nombre;
     @Column(name = "apellidopaterno")
     private String apellidoPaterno;
     @Column(name = "apellidomaterno")
@@ -43,8 +44,11 @@ public class UsuarioVista {
     private String sexo;
     @Column(name = "telefono")
     private String telefono;
-    @Column(name = "esattus")
+    @Column(name = "estatus")
     private Integer estatus;
+    @Lob
+    @Column(name = "imagen")
+    private String imagen;
     @Column(name = "idrol")
     private Integer idRol;
     @Column(name = "rolasignado")

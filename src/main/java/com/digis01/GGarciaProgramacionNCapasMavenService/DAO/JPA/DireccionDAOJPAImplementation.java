@@ -5,6 +5,7 @@ import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
 import jakarta.persistence.EntityManager;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +58,7 @@ public class DireccionDAOJPAImplementation implements IDireccion {
     @Transactional
     public Result DireccionModify(Direccion direccion, int IdUsuario) {
         Result result = new Result();
-        
+
         try {
             if (IdUsuario > 0) {
                 Usuario usuario = EntityManager.getReference(Usuario.class, IdUsuario);
@@ -65,6 +66,27 @@ public class DireccionDAOJPAImplementation implements IDireccion {
             }
             EntityManager.merge(direccion);
             result.correct = true;
+        } catch (Exception e) {
+            result.correct = false;
+            result.errorMessage = e.getLocalizedMessage();
+            result.ex = e;
+        }
+        return result;
+    }
+
+    @Override
+    @Transactional
+    public Result DeleteDireccion(int idDireccion) {
+
+        Result result = new Result();
+        try {
+            String jpql = "DELETE FROM Direccion d WHERE d.idDireccion = :idDireccion";
+            Query query = EntityManager.createQuery(jpql);
+            query.setParameter("idDireccion", idDireccion);
+            int realizado = query.executeUpdate();
+            if (realizado > 0) {
+                result.correct = true;
+            }
         } catch (Exception e) {
             result.correct = false;
             result.errorMessage = e.getLocalizedMessage();

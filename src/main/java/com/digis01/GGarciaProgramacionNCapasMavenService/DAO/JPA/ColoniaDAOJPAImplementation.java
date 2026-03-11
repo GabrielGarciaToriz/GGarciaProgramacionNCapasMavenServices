@@ -20,7 +20,7 @@ public class ColoniaDAOJPAImplementation implements IColonia {
     public Result GetAllById(int IdMunicipio) {
         Result result = new Result();
         try {
-            String jpql = "SELECT c FROM Colonia c WHERE c.municipio.idMunicipio = :idMunicipio";
+            String jpql = "SELECT c FROM Colonia c WHERE c.municipio.idMunicipio = :idMunicipio ORDER BY c.nombre ASC";
             TypedQuery<Colonia> query = entityManager.createQuery(jpql, Colonia.class);
             query.setParameter("idMunicipio", IdMunicipio);
             List<Colonia> colonias = query.getResultList();
@@ -38,7 +38,7 @@ public class ColoniaDAOJPAImplementation implements IColonia {
     public Result GetByCodigoPostal(String CodigoPostal) {
         Result result = new Result();
         try {
-            String jpql = "Select c FROM Colonia c WHERE c.codigoPostal = :CodigoPostal";
+            String jpql = "SELECT c FROM Colonia c WHERE c.codigoPostal = :CodigoPostal ORDER BY c.nombre ASC";
             TypedQuery<Colonia> query = entityManager.createQuery(jpql, Colonia.class);
             query.setParameter("CodigoPostal", CodigoPostal);
             List<Colonia> colonias = query.getResultList();

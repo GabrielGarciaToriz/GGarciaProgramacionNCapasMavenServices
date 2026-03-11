@@ -1,18 +1,11 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.IUsuario;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Colonia;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Direccion;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Estado;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Municipio;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Pais;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Rol;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.UsuarioVista;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.ParameterMode;
-import jakarta.persistence.StoredProcedureQuery;
+import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +32,7 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
                          LEFT JOIN FETCH c.municipio m
                          LEFT JOIN FETCH m.estado e
                          LEFT JOIN FETCH e.pais
+                         ORDER BY u.apellidoPaterno ASC, u.nombre ASC
                          """;
             TypedQuery<Usuario> query = EntityManager.createQuery(jpql, Usuario.class);
             result.objects = new ArrayList<>(query.getResultList());
@@ -57,7 +51,7 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
         result.objects = new ArrayList<>();
         try {
             String jpql = """
-                         SELECT DISTINCT u FROM Usuario u
+                         SELECT u FROM Usuario u
                          LEFT JOIN FETCH u.rol
                          LEFT JOIN FETCH u.direcciones d
                          LEFT JOIN FETCH d.colonia c
@@ -79,59 +73,44 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
     }
 
     @Override
+    @Transactional
     public Result DeleteDireccionUsuariobyId(int IdUsuario) {
         Result result = new Result();
-
         try {
-            Usuario usuario = EntityManager.find(Usuario.class, IdUsuario);
-            if (usuario != null) {
-                EntityManager.remove(usuario);
-                result.correct = true;
-
-            } else {
-                result.correct = false;
-                result.errorMessage = "No se pudo eliminar al usuario";
-            }
-        } catch (Exception e) {
-            result.correct = false;
-            result.errorMessage = e.getLocalizedMessage();
-            result.ex = e;
-
-        }
-        return result;
-    }
-
-    @Override
-    @Transactional
-    public Result DeleteDireccionById(int IdDireccion) {
-        Result result = new Result();
-        try {
-            Direccion direccion = EntityManager.find(Direccion.class, IdDireccion);
-            if (direccion != null) {
-                Usuario usuarioPrimario = direccion.getUsuario();
-                if (usuarioPrimario != null) {
-                    usuarioPrimario.getDirecciones().remove(direccion);
+            String eliminarDireccion = "DELETE FROM Direccion d WHERE d.usuario.idUsuario = :idUsuario";
+            Query queryDireccion = EntityManager.createQuery(eliminarDireccion);
+            queryDireccion.setParameter("idUsuario", IdUsuario);
+            int direccionEliminada = queryDireccion.executeUpdate();
+            if (direccionEliminada > 0) {
+                String eliminarUsuario = "DELETE FROM Usuario WHERE idUsuario = :idUsuario";
+                Query queryUsuario = EntityManager.createQuery(eliminarUsuario);
+                queryUsuario.setParameter("idUsuario", IdUsuario);
+                int usuarioEliminado = queryUsuario.executeUpdate();
+                if (usuarioEliminado > 0) {
+                    result.correct = true;
+                } else {
+                    result.correct = false;
+                    result.errorMessage = "Fallo al elminar el usuario";
                 }
-                EntityManager.remove(direccion);
-                result.correct = true;
             } else {
                 result.correct = false;
-                result.errorMessage = "No se pudo borrar la direccion";
+                result.errorMessage = "Fallo al eliminar la o las direcciones";
             }
         } catch (Exception e) {
             result.correct = false;
             result.errorMessage = e.getLocalizedMessage();
             result.ex = e;
+
         }
         return result;
     }
 
     @Override
     @Transactional
-    public Result Add(Usuario usuario) {
+    public Result AddUsuarioDireccion(Usuario usuario) {
         Result result = new Result();
         try {
-            EntityManager.persist(usuario);
+            EntityManager.merge(usuario);
             result.correct = true;
         } catch (Exception e) {
             result.correct = false;
@@ -150,7 +129,7 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
                          WHERE (:nombre IS NULL OR LOWER (v.nombre) LIKE LOWER(CONCAT('%', :nombre ,'%')))
                          AND (:apellidoPaterno IS NULL OR LOWER (v.apellidoPaterno) LIKE LOWER (CONCAT('%', :apellidoPaterno, '%')))
                          AND (:apellidoMaterno IS NULL OR LOWER (v.apellidoMaterno) LIKE LOWER (CONCAT('%', :apellidoMaterno, '%')))
-                         AND (:idRol = 0 OR v.idrol = :idRol)
+                         AND (:idRol = 0 OR v.idRol = :idRol)
                          """;
             TypedQuery<UsuarioVista> query = EntityManager.createQuery(jpql, UsuarioVista.class);
             query.setParameter("nombre", (usuario.getNombre() != null && !usuario.getNombre().isBlank() ? usuario.getNombre().trim() : ""));

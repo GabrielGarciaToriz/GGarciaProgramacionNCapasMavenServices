@@ -20,7 +20,7 @@ public class PaisDAOJPAImplementation implements IPais {
     public Result GetAll() {
         Result result = new Result();
         try {
-            TypedQuery<Pais> query = entityManager.createQuery("FROM Pais", Pais.class);
+            TypedQuery<Pais> query = entityManager.createQuery("SELECT p FROM Pais p ORDER BY p.nombre ASC", Pais.class);
             List<Pais> paises = query.getResultList();
             result.objects = new ArrayList<>(paises);
             result.correct = true;

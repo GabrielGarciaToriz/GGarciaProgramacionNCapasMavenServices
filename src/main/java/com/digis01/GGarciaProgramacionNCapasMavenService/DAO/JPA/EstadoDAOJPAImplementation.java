@@ -20,7 +20,7 @@ public class EstadoDAOJPAImplementation implements IEstado {
     public Result GetAllById(int idPais) {
         Result result = new Result();
         try {
-            String jpql = "SELECT e FROM Estado e WHERE e.pais.idPais = :idPais";
+            String jpql = "SELECT e FROM Estado e WHERE e.pais.idPais = :idPais ORDER BY e.nombre ASC";
             TypedQuery<Estado> query = entityManager.createQuery(jpql, Estado.class);
             query.setParameter("idPais", idPais);
             List<Estado> estados = query.getResultList();

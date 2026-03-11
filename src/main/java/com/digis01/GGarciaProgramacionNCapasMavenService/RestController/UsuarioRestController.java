@@ -6,6 +6,7 @@ import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,6 +21,7 @@ public class UsuarioRestController {
     @Autowired
     private UsuarioDAOJPAImplementation usuarioDAOJPA;
 
+    // <editor-fold defaultstate="collapsed" desc="--- GET MAPPINGS / LECTURA ---">
     @GetMapping()
     public ResponseEntity GetAll() {
         try {
@@ -57,6 +59,8 @@ public class UsuarioRestController {
         }
     }
 
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="--- POST MAPPINGS / ENVIO ---">
     @PostMapping()
     public ResponseEntity UsuarioDireccionAdd(@RequestBody Usuario usuario) {
         try {
@@ -65,7 +69,7 @@ public class UsuarioRestController {
                     direccion.setUsuario(usuario);
                 }
             }
-            Result result = usuarioDAOJPA.Add(usuario);
+            Result result = usuarioDAOJPA.AddUsuarioDireccion(usuario);
             if (result.correct) {
                 return ResponseEntity.ok(result);
             } else {
@@ -108,5 +112,20 @@ public class UsuarioRestController {
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }
     }
-
+    // </editor-fold>
+    // <editor-fold defaultstate="collapsed" desc="--- DELETE MAPPINGS / LECTURA ---">
+    @DeleteMapping("/{idUsuario}")
+    public ResponseEntity DeleteUsuarioDireccion(@PathVariable("idUsuario") int idUsuario) {
+        try {
+            Result result = usuarioDAOJPA.DeleteDireccionUsuariobyId(idUsuario);
+            if (result.correct) {
+                return ResponseEntity.ok(result);
+            } else {
+                return ResponseEntity.badRequest().body(result.errorMessage);
+            }
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(e);
+        }
+    }
+    // </editor-fold>
 }
