@@ -3,7 +3,6 @@ package com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA;
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.IUsuario;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
 import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.UsuarioVista;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;
@@ -110,7 +109,8 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
     public Result AddUsuarioDireccion(Usuario usuario) {
         Result result = new Result();
         try {
-            EntityManager.merge(usuario);
+            usuario.setIdUsuario(null);
+            EntityManager.persist(usuario);
             result.correct = true;
         } catch (Exception e) {
             result.correct = false;
