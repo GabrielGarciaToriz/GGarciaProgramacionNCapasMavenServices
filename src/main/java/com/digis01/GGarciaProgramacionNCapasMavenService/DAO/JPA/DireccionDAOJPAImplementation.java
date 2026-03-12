@@ -40,10 +40,9 @@ public class DireccionDAOJPAImplementation implements IDireccion {
     public Result DireccionAdd(Direccion direccion, int IdUsuario) {
         Result result = new Result();
         try {
-            if (IdUsuario > 0) {
-                Usuario usuario = EntityManager.getReference(Usuario.class, IdUsuario);
-                direccion.setUsuario(usuario);
-            }
+
+            Usuario usuario = EntityManager.getReference(Usuario.class, IdUsuario);
+            direccion.setUsuario(usuario);
             EntityManager.persist(direccion);
             result.correct = true;
         } catch (Exception e) {

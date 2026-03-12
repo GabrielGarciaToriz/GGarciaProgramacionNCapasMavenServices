@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/direccion")
 public class DireccionRestController {
-    
+
     @Autowired
     private DireccionDAOJPAImplementation DireccionDAOJPA;
-    
+
     @GetMapping("/{idUsuario}")
     public ResponseEntity GetById(@PathVariable("idUsuario") int idUsuario) {
         try {
@@ -38,10 +38,11 @@ public class DireccionRestController {
             return ResponseEntity.status(500).body(e);
         }
     }
-    
+
     @PostMapping("/{idUsuario}")
     public ResponseEntity AddDireccionToUsuario(@PathVariable("idUsuario") int IdUsuario, @RequestBody Direccion direccion) {
         try {
+            direccion.setIdDireccion(IdUsuario);
             Result result = DireccionDAOJPA.DireccionAdd(direccion, IdUsuario);
             if (result.correct) {
                 return ResponseEntity.ok(result);
@@ -49,10 +50,10 @@ public class DireccionRestController {
                 return ResponseEntity.badRequest().body(result.errorMessage);
             }
         } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
+            return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }
     }
-    
+
     @PutMapping("/{idDireccion}/{idUsuario}")
     public ResponseEntity ModifyDireccion(@PathVariable("idDireccion") int IdDireccion, @PathVariable("idUsuario") int IdUsuario, @RequestBody Direccion direccion) {
         try {
@@ -67,7 +68,7 @@ public class DireccionRestController {
             return ResponseEntity.status(500).body(e);
         }
     }
-    
+
     @DeleteMapping("/{idDireccion}")
     public ResponseEntity DeleteDireccion(@PathVariable("idDireccion") int idDireccion) {
         try {
@@ -81,5 +82,5 @@ public class DireccionRestController {
             return ResponseEntity.status(500).body(e.getLocalizedMessage());
         }
     }
-    
+
 }

@@ -125,13 +125,20 @@ public class UsuarioDAOJPAImplementation implements IUsuario {
         Result result = new Result();
         try {
             String jpql = """
-                         SELECT v FROM UsuarioVista v
-                         WHERE (:nombre IS NULL OR LOWER (v.nombre) LIKE LOWER(CONCAT('%', :nombre ,'%')))
-                         AND (:apellidoPaterno IS NULL OR LOWER (v.apellidoPaterno) LIKE LOWER (CONCAT('%', :apellidoPaterno, '%')))
-                         AND (:apellidoMaterno IS NULL OR LOWER (v.apellidoMaterno) LIKE LOWER (CONCAT('%', :apellidoMaterno, '%')))
-                         AND (:idRol = 0 OR v.idRol = :idRol)
+                        SELECT DISTINCT u FROM Usuario u
+                        LEFT JOIN FETCH u.rol
+                        LEFT JOIN FETCH u.direcciones d
+                        LEFT JOIN FETCH d.colonia c
+                        LEFT JOIN FETCH c.municipio m
+                        LEFT JOIN FETCH m.estado e
+                        LEFT JOIN FETCH e.pais
+                        WHERE (:nombre = '' OR LOWER(u.nombre) LIKE LOWER(CONCAT('%', :nombre ,'%')))
+                        AND (:apellidoPaterno = '' OR LOWER(u.apellidoPaterno) LIKE LOWER(CONCAT('%', :apellidoPaterno, '%')))
+                        AND (:apellidoMaterno = '' OR LOWER(u.apellidoMaterno) LIKE LOWER(CONCAT('%', :apellidoMaterno, '%')))
+                        AND (:idRol = 0 OR u.rol.idRol = :idRol)
+                        ORDER BY u.apellidoPaterno ASC, u.nombre ASC
                          """;
-            TypedQuery<UsuarioVista> query = EntityManager.createQuery(jpql, UsuarioVista.class);
+            TypedQuery<Usuario> query = EntityManager.createQuery(jpql, Usuario.class);
             query.setParameter("nombre", (usuario.getNombre() != null && !usuario.getNombre().isBlank() ? usuario.getNombre().trim() : ""));
             query.setParameter("apellidoPaterno", (usuario.getApellidoPaterno() != null && !usuario.getApellidoPaterno().isBlank() ? usuario.getApellidoPaterno() : ""));
             query.setParameter("apellidoMaterno", (usuario.getApellidoMaterno() != null && !usuario.getApellidoMaterno().isBlank() ? usuario.getApellidoMaterno().trim() : ""));
