@@ -1,5 +1,6 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.JPA;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -15,12 +16,15 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
+@Schema(description = "Entidad que define los niveles de acceso o roles dentro del sistema")
 public class Rol {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idrol")
+    @Schema(description = "Identificador único autogenerado del rol", example = "2", accessMode = Schema.AccessMode.READ_ONLY)
     private int idRol;
     @Column(name = "nombrerol")
+    @Schema(description = "Nombre descriptivo del rol", example = "Administrador")
     private String nombre;
 }
