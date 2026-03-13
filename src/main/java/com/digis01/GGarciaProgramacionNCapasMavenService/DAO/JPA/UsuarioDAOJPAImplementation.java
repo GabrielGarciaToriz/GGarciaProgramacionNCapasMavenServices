@@ -1,8 +1,8 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.IUsuario;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Usuario;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Query;
 import jakarta.persistence.TypedQuery;

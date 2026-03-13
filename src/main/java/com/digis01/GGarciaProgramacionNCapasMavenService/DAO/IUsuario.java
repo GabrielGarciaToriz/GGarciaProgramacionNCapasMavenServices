@@ -1,7 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Usuario;
 
 import java.util.List;
 

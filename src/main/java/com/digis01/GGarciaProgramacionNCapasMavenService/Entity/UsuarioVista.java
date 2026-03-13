@@ -1,4 +1,4 @@
-package com.digis01.GGarciaProgramacionNCapasMavenService.JPA;
+package com.digis01.GGarciaProgramacionNCapasMavenService.Entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

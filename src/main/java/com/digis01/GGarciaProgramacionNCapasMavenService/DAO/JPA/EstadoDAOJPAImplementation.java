@@ -1,8 +1,8 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.IEstado;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Estado;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Estado;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import org.springframework.beans.factory.annotation.Autowired;

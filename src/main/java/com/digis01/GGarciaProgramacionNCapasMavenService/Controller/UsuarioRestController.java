@@ -1,9 +1,10 @@
-package com.digis01.GGarciaProgramacionNCapasMavenService.RestController;
+package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.UsuarioDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Direccion;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Usuario;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Direccion;
+import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Usuario;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Service.UsuarioService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -12,6 +13,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +31,8 @@ public class UsuarioRestController {
 
     @Autowired
     private UsuarioDAOJPAImplementation usuarioDAOJPA;
+    @Autowired
+    private UsuarioService usuarioService;
 
     // <editor-fold defaultstate="collapsed" desc="--- GET MAPPINGS / LECTURA ---">
     @Operation(
@@ -61,21 +66,9 @@ public class UsuarioRestController {
             }
     )
     @GetMapping()
-    public ResponseEntity GetAll() {
-        try {
-            Result result = usuarioDAOJPA.GetAll();
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception ex) {
-            return ResponseEntity.status(500).body(ex);
-        }
+    public ResponseEntity<Result> GetAll() {
+        Result result = usuarioService.getAll();
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -110,24 +103,12 @@ public class UsuarioRestController {
     )
 
     @GetMapping("/{idUsuario}")
-    public ResponseEntity GetAllById(
+    public ResponseEntity<Result> GetAllById(
             @Parameter(description = "ID unico del usuario", example = "65")
             @PathVariable("idUsuario") int IdUsuario) {
-        try {
-            Result result = usuarioDAOJPA.GetAllById(IdUsuario);
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result.objects.get(0));
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
+        Result result = usuarioService.getAllById(IdUsuario);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
 
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
     }
 
     // </editor-fold>
@@ -157,23 +138,9 @@ public class UsuarioRestController {
                 )
             })
     @PostMapping()
-    public ResponseEntity UsuarioDireccionAdd(@RequestBody Usuario usuario) {
-        try {
-            if (usuario.getDirecciones() != null) {
-                for (Direccion direccion : usuario.getDirecciones()) {
-                    direccion.setUsuario(usuario);
-                }
-            }
-            Result result = usuarioDAOJPA.AddUsuarioDireccion(usuario);
-            if (result.correct) {
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getLocalizedMessage());
-        }
-
+    public ResponseEntity<Result> UsuarioDireccionAddOrUpdate(@RequestBody Usuario usuario) {
+        Result result = usuarioService.addOrModifyUsuario(usuario);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -209,20 +176,8 @@ public class UsuarioRestController {
 
     @PostMapping("/buscar")
     public ResponseEntity BusquedaUsuarioDireccion(@RequestBody Usuario usuario) {
-        try {
-            Result result = usuarioDAOJPA.UsuarioDireccionBusqueda(usuario);
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+        Result result = usuarioService.usuarioDireccionBusqueda(usuario);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -256,16 +211,17 @@ public class UsuarioRestController {
             @PathVariable("idUsuario") int idUsuario,
             @Parameter(description = "Nuevo a estatus a aplicar (ej. 1 para activo, 0 para inactivo", example = "0")
             @PathVariable("estatus") int Estatus) {
-        try {
-            Result result = usuarioDAOJPA.CambiarEstatus(idUsuario, Estatus);
-            if (result.correct) {
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getLocalizedMessage());
-        }
+//        try {
+//            Result result = usuarioDAOJPA.CambiarEstatus(idUsuario, Estatus);
+//            if (result.correct) {
+//                return ResponseEntity.ok(result);
+//            } else {
+//                return ResponseEntity.badRequest().body(result.errorMessage);
+//            }
+//        } catch (Exception e) {
+//            return ResponseEntity.status(500).body(e.getLocalizedMessage());
+//        }
+        return null;
     }
 
     // </editor-fold>
@@ -297,16 +253,8 @@ public class UsuarioRestController {
     public ResponseEntity DeleteUsuarioDireccion(
             @Parameter(description = "Id del usuario a eliminar", example = "102")
             @PathVariable("idUsuario") int idUsuario) {
-        try {
-            Result result = usuarioDAOJPA.DeleteDireccionUsuariobyId(idUsuario);
-            if (result.correct) {
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+//       
+        return null;
     }
     // </editor-fold>
 }

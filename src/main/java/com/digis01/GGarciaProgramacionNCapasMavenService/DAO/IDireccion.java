@@ -1,7 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Direccion;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Direccion;
 
 public interface IDireccion {
 

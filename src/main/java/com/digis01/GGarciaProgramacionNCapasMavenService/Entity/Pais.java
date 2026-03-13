@@ -1,4 +1,4 @@
-package com.digis01.GGarciaProgramacionNCapasMavenService.JPA;
+package com.digis01.GGarciaProgramacionNCapasMavenService.Entity;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;

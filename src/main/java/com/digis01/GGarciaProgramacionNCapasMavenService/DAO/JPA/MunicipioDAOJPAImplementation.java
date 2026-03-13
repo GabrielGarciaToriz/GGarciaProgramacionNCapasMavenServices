@@ -1,8 +1,8 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.IMunicipio;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Municipio;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Municipio;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import java.util.ArrayList;

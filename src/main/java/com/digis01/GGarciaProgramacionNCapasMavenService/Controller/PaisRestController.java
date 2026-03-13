@@ -1,7 +1,7 @@
-package com.digis01.GGarciaProgramacionNCapasMavenService.RestController;
+package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.PaisDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.JPA.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
