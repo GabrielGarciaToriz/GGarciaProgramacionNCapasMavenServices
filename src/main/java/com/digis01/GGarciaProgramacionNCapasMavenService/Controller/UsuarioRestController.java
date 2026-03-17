@@ -206,22 +206,13 @@ public class UsuarioRestController {
             }
     )
     @PostMapping("/cambioStatus/{idUsuario}/{estatus}")
-    public ResponseEntity CambiarEstatus(
+    public ResponseEntity<Result> CambiarEstatus(
             @Parameter(description = "ID del usuario", example = "102")
             @PathVariable("idUsuario") int idUsuario,
             @Parameter(description = "Nuevo a estatus a aplicar (ej. 1 para activo, 0 para inactivo", example = "0")
             @PathVariable("estatus") int Estatus) {
-//        try {
-//            Result result = usuarioDAOJPA.CambiarEstatus(idUsuario, Estatus);
-//            if (result.correct) {
-//                return ResponseEntity.ok(result);
-//            } else {
-//                return ResponseEntity.badRequest().body(result.errorMessage);
-//            }
-//        } catch (Exception e) {
-//            return ResponseEntity.status(500).body(e.getLocalizedMessage());
-//        }
-        return null;
+        Result result = usuarioService.cambiarEstatus(idUsuario, Estatus);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     // </editor-fold>
@@ -250,11 +241,12 @@ public class UsuarioRestController {
                 )
             })
     @DeleteMapping("/{idUsuario}")
-    public ResponseEntity DeleteUsuarioDireccion(
+    public ResponseEntity<Result> DeleteUsuarioDireccion(
             @Parameter(description = "Id del usuario a eliminar", example = "102")
             @PathVariable("idUsuario") int idUsuario) {
-//       
-        return null;
+        Result result = usuarioService.deleteDireccionUsuariobyId(idUsuario);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+
     }
     // </editor-fold>
 }

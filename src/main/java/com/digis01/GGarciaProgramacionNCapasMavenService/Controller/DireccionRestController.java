@@ -1,8 +1,9 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
 import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.DireccionDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
 import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Direccion;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Service.DireccionService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +30,9 @@ public class DireccionRestController {
 
     @Autowired
     private DireccionDAOJPAImplementation DireccionDAOJPA;
+
+    @Autowired
+    private DireccionService direccionService;
 
     @Operation(summary = "Obtener direcciones por Usuario",
             description = "Recupera todas las direcciones que pertenecen a un usuario especifico mediante su ID")
@@ -56,25 +61,13 @@ public class DireccionRestController {
     })
 
     @GetMapping("/{idUsuario}")
-    public ResponseEntity GetById(
+    public ResponseEntity<Result> GetById(
             @Parameter(
                     description = "ID del usuario",
                     example = "65")
             @PathVariable("idUsuario") int idUsuario) {
-        try {
-            Result result = DireccionDAOJPA.DireccionGetAllById(idUsuario);
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+        Result result = direccionService.getAllByIdUsuario(idUsuario);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -100,18 +93,9 @@ public class DireccionRestController {
             })
 
     @PostMapping("/{idUsuario}")
-    public ResponseEntity AddDireccionToUsuario(@PathVariable("idUsuario") int IdUsuario, @RequestBody Direccion direccion) {
-        try {
-            direccion.setIdDireccion(IdUsuario);
-            Result result = DireccionDAOJPA.DireccionAdd(direccion, IdUsuario);
-            if (result.correct) {
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getLocalizedMessage());
-        }
+    public ResponseEntity <Result>AddDireccionToUsuario(@PathVariable("idUsuario") int IdUsuario, @RequestBody Direccion direccion) {
+        Result result = direccionService.addOrModifyDireccion(direccion, IdUsuario);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -138,23 +122,14 @@ public class DireccionRestController {
     })
 
     @PutMapping("/{idDireccion}/{idUsuario}")
-    public ResponseEntity ModifyDireccion(
+    public ResponseEntity <Result>ModifyDireccion(
             @Parameter(description = "ID de la direccion a modificar", example = "121")
             @PathVariable("idDireccion") int IdDireccion,
             @Parameter(description = "ID del usuario propietario de la direccion", example = "65")
             @PathVariable("idUsuario") int IdUsuario,
             @RequestBody Direccion direccion) {
-        try {
-            direccion.setIdDireccion(IdDireccion);
-            Result result = DireccionDAOJPA.DireccionModify(direccion, IdUsuario);
-            if (result.correct) {
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+        Result result = direccionService.addOrModifyDireccion(direccion, IdUsuario);
+        return new ResponseEntity<Result>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
     @Operation(
@@ -183,21 +158,13 @@ public class DireccionRestController {
             })
 
     @DeleteMapping("/{idDireccion}")
-    public ResponseEntity DeleteDireccion(
+    public ResponseEntity<Result> DeleteDireccion(
             @Parameter(
                     description = "ID de la direccion a eliminar",
                     example = "121")
             @PathVariable("idDireccion") int idDireccion) {
-        try {
-            Result result = DireccionDAOJPA.DeleteDireccion(idDireccion);
-            if (result.correct) {
-                return ResponseEntity.ok(result);
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e.getLocalizedMessage());
-        }
+        Result result = direccionService.deleteDireccion(idDireccion);
+        return new ResponseEntity<Result>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
 }
