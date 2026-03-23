@@ -1,6 +1,5 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.DireccionDAOJPAImplementation;
 import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
 import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMavenService.Service.DireccionService;
@@ -27,9 +26,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/direccion")
 @Tag(name = "Direcciones", description = "Endpoints para crear, leer, actualizar y eliminar (CRUD( las direcciones asociadas a un usuario")
 public class DireccionRestController {
-
-    @Autowired
-    private DireccionDAOJPAImplementation DireccionDAOJPA;
 
     @Autowired
     private DireccionService direccionService;

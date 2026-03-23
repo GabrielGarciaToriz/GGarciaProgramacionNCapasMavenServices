@@ -1,7 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.MunicipioDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Service.CatalogoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.modelmapper.internal.bytebuddy.implementation.Implementation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MunicipioRestController {
 
     @Autowired
-    private MunicipioDAOJPAImplementation MunicipioDAOJPA;
+    private CatalogoService MunicipioService;
 
     @Operation(summary = "Obtener municipios con base en el ID de Estado",
             description = "Recuperar la lista de municipios que pertenecen a un estado especifico.")
@@ -45,26 +46,13 @@ public class MunicipioRestController {
     })
 
     @GetMapping("/{idEstado}")
-    public ResponseEntity GetAllById(
+    public ResponseEntity<Result> GetAllById(
             @Parameter(
                     description = "ID del estado a consultar",
                     example = "3")
             @PathVariable("idEstado") int idEstado) {
-        try {
-            Result result = MunicipioDAOJPA.GetAllById(idEstado);
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+        Result result = MunicipioService.getMunicipioByEstado(idEstado);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
 }

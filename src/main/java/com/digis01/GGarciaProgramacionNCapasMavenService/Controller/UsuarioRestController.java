@@ -1,7 +1,5 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.UsuarioDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Direccion;
 import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
 import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Usuario;
 import com.digis01.GGarciaProgramacionNCapasMavenService.Service.UsuarioService;
@@ -29,8 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "Usuarios", description = "Gestion completa de los usuarios (Alta, Baja, Modificacion, Busqueda y Cambio de estatus ")
 public class UsuarioRestController {
 
-    @Autowired
-    private UsuarioDAOJPAImplementation usuarioDAOJPA;
     @Autowired
     private UsuarioService usuarioService;
 

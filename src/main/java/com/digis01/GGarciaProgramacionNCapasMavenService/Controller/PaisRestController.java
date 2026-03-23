@@ -1,7 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.PaisDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Service.CatalogoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class PaisRestController {
 
     @Autowired
-    private PaisDAOJPAImplementation PaisDAOJPA;
+    private CatalogoService PaisService;
 
     @Operation(summary = " Obtener todos los paises", description = "Ejecuta una consulta general para recuperar la lista completa de los paises disponibles")
     @ApiResponses(value = {
@@ -32,21 +33,9 @@ public class PaisRestController {
         @ApiResponse(responseCode = "500", description = "Error interno del servidor", content = @Content)
     })
     @GetMapping()
-    public ResponseEntity GetAll() {
-        try {
-            Result result = PaisDAOJPA.GetAll();
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
-    }
+    public ResponseEntity<Result> GetAll() {
+        Result result = PaisService.getPaises();
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
 
+    }
 }

@@ -1,7 +1,7 @@
 package com.digis01.GGarciaProgramacionNCapasMavenService.Controller;
 
-import com.digis01.GGarciaProgramacionNCapasMavenService.DAO.JPA.ColoniaDAOJPAImplementation;
-import com.digis01.GGarciaProgramacionNCapasMavenService.Entity.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.DTO.Result;
+import com.digis01.GGarciaProgramacionNCapasMavenService.Service.CatalogoService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ColoniaRestController {
 
     @Autowired
-    private ColoniaDAOJPAImplementation ColoniaDAOJPA;
+    private CatalogoService ColoniaService;
 
     @Operation(
             summary = "Obtener colonias por ID de Municipio",
@@ -50,23 +51,12 @@ public class ColoniaRestController {
                         content = @Content)
             })
     @GetMapping("/{idMunicipio}")
-    public ResponseEntity GetById(
+    public ResponseEntity<Result> GetById(
             @Parameter(description = "ID del municipio a consultar", example = "15")
             @PathVariable("idMunicipio") int IdMunicipio) {
-        try {
-            Result result = ColoniaDAOJPA.GetAllById(IdMunicipio);
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+        Result result = ColoniaService.getColoniaByMunicipio(IdMunicipio);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+
     }
 
     @Operation(
@@ -96,24 +86,12 @@ public class ColoniaRestController {
             })
 
     @GetMapping("/codigoPostal/{codigoPostal}")
-    public ResponseEntity GetByCodigoPostal(
+    public ResponseEntity<Result> GetByCodigoPostal(
             @Parameter(
                     description = "Codigo postal con 5 digitos",
-                    example="57710")
+                    example = "57710")
             @PathVariable("codigoPostal") String CodigoPostal) {
-        try {
-            Result result = ColoniaDAOJPA.GetByCodigoPostal(CodigoPostal);
-            if (result.correct) {
-                if (result.objects != null && !result.objects.isEmpty()) {
-                    return ResponseEntity.ok(result);
-                } else {
-                    return ResponseEntity.noContent().build();
-                }
-            } else {
-                return ResponseEntity.badRequest().body(result.errorMessage);
-            }
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(e);
-        }
+        Result result = ColoniaService.getColoniaByCP(CodigoPostal);
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 }
