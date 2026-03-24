@@ -21,7 +21,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
-    // Atrapa la excepción que lanzamos en el AppConfig si no encuentra el usuario
     @ExceptionHandler(UsernameNotFoundException.class)
     public ResponseEntity<ErrorDTO> handleUserNotFound(UsernameNotFoundException ex) {
         ErrorDTO error = new ErrorDTO(
@@ -31,7 +30,6 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, HttpStatus.UNAUTHORIZED);
     }
 
-    // Opcional: Un "paracaídas" genérico para cualquier otro error del servidor
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDTO> handleGlobalException(Exception ex) {
         ErrorDTO error = new ErrorDTO(
