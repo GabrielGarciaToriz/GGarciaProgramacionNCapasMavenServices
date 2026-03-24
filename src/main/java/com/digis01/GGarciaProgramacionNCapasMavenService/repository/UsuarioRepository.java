@@ -68,3 +68,8 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
            WHERE u.userName = :userName
            """)
     Usuario findByUserNameWithDetails(@Param("userName") String userName);
+
+    @Modifying
+    @Query("UPDATE Usuario u SET u.estatus = :estatus WHERE u.idUsuario = :idUsuario")
+    int cambiarEstatus(@Param("idUsuario") int idUsuario, @Param("estatus") int estatus);
+}

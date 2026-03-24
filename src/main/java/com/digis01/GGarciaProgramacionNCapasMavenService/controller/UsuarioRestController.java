@@ -11,9 +11,10 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -31,6 +32,13 @@ public class UsuarioRestController {
     private UsuarioService usuarioService;
 
     // <editor-fold defaultstate="collapsed" desc="--- GET MAPPINGS / LECTURA ---">
+    @GetMapping("/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<Result> GetMyProfile(Authentication authentication) {
+        Result result = usuarioService.getByUserName(authentication.getName());
+        return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
+    }
+
     @Operation(
             summary = "Obtener todos los usuarios",
             description = "Recupera la lista general de todos los usuarios registrados en el sistema."
@@ -62,6 +70,7 @@ public class UsuarioRestController {
             }
     )
     @GetMapping()
+    @PreAuthorize("hasAuthority('Administrador')")
     public ResponseEntity<Result> GetAll() {
         Result result = usuarioService.getAll();
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
@@ -99,6 +108,7 @@ public class UsuarioRestController {
     )
 
     @GetMapping("/{idUsuario}")
+    @PreAuthorize("hasAuthority('Administrador')")
     public ResponseEntity<Result> GetAllById(
             @Parameter(description = "ID unico del usuario", example = "65")
             @PathVariable("idUsuario") int IdUsuario) {
@@ -134,6 +144,7 @@ public class UsuarioRestController {
                 )
             })
     @PostMapping()
+    @PreAuthorize("hasAuthority('Administrador')")
     public ResponseEntity<Result> UsuarioDireccionAddOrUpdate(@RequestBody Usuario usuario) {
         Result result = usuarioService.addOrModifyUsuario(usuario);
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
@@ -171,6 +182,7 @@ public class UsuarioRestController {
     )
 
     @PostMapping("/buscar")
+    @PreAuthorize("hasAuthority('Administrador')")
     public ResponseEntity BusquedaUsuarioDireccion(@RequestBody Usuario usuario) {
         Result result = usuarioService.usuarioDireccionBusqueda(usuario);
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
@@ -202,6 +214,7 @@ public class UsuarioRestController {
             }
     )
     @PostMapping("/cambioStatus/{idUsuario}/{estatus}")
+    @PreAuthorize("hasAuthority('Administrador')")
     public ResponseEntity<Result> CambiarEstatus(
             @Parameter(description = "ID del usuario", example = "102")
             @PathVariable("idUsuario") int idUsuario,
@@ -237,6 +250,7 @@ public class UsuarioRestController {
                 )
             })
     @DeleteMapping("/{idUsuario}")
+    @PreAuthorize("hasAuthority('Administrador')")
     public ResponseEntity<Result> DeleteUsuarioDireccion(
             @Parameter(description = "Id del usuario a eliminar", example = "102")
             @PathVariable("idUsuario") int idUsuario) {
