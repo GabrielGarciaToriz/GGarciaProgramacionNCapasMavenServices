@@ -83,6 +83,27 @@ public class UsuarioService {
         return result;
     }
 
+    public Result getByUserName(String userName) {
+        Result result = new Result();
+        try {
+            Usuario usuario = usuarioRepository.findByUserNameWithDetails(userName);
+            result.object = usuario;
+            result.correct = usuario != null;
+            if (!result.correct) {
+                result.errorMessage = "No se encontró el usuario autenticado.";
+            }
+        } catch (Exception e) {
+            manejarExcepcion(result, e);
+        }
+        return result;
+    }
+
+    public Integer obtenerIdPorUserName(String userName) {
+        return usuarioRepository.findByUserName(userName)
+                .map(Usuario::getIdUsuario)
+                .orElse(null);
+    }
+
     private Result envolverResultadoLista(java.util.function.Supplier<List<Usuario>> consulta) {
         Result result = new Result();
         try {
