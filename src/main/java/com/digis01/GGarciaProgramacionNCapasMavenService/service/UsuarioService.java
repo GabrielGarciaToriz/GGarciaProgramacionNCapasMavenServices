@@ -104,6 +104,11 @@ public class UsuarioService {
                 .orElse(null);
     }
 
+    public boolean esMismoUsuario(String userName, int idUsuario) {
+        Integer idAutenticado = obtenerIdPorUserName(userName);
+        return idAutenticado != null && idAutenticado == idUsuario;
+    }
+
     private Result envolverResultadoLista(java.util.function.Supplier<List<Usuario>> consulta) {
         Result result = new Result();
         try {

@@ -70,7 +70,7 @@ public class UsuarioRestController {
             }
     )
     @GetMapping()
-    @PreAuthorize("hasAuthority('Administrador')")
+    @PreAuthorize("hasAnyAuthority('Gerente','Administrador')")
     public ResponseEntity<Result> GetAll() {
         Result result = usuarioService.getAll();
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
@@ -108,11 +108,11 @@ public class UsuarioRestController {
     )
 
     @GetMapping("/{idUsuario}")
-    @PreAuthorize("hasAuthority('Administrador')")
+    @PreAuthorize("hasAnyAuthority('Gerente','Administrador') or @usuarioService.esMismoUsuario(authentication.name, #idUsuario)")
     public ResponseEntity<Result> GetAllById(
             @Parameter(description = "ID unico del usuario", example = "65")
-            @PathVariable("idUsuario") int IdUsuario) {
-        Result result = usuarioService.getAllById(IdUsuario);
+            @PathVariable("idUsuario") int idUsuario) {
+        Result result = usuarioService.getAllById(idUsuario);
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
 
     }
@@ -182,7 +182,7 @@ public class UsuarioRestController {
     )
 
     @PostMapping("/buscar")
-    @PreAuthorize("hasAuthority('Administrador')")
+    @PreAuthorize("hasAnyAuthority('Gerente','Administrador')")
     public ResponseEntity BusquedaUsuarioDireccion(@RequestBody Usuario usuario) {
         Result result = usuarioService.usuarioDireccionBusqueda(usuario);
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);

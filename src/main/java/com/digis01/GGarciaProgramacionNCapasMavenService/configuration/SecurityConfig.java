@@ -4,15 +4,19 @@ import com.digis01.GGarciaProgramacionNCapasMavenService.security.JwtAuthenticat
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
@@ -26,7 +30,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf(csrf -> csrf.disable())
+            .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
                         "/api/auth/**",
@@ -34,8 +38,12 @@ public class SecurityConfig {
                         "/swagger-ui/**",
                         "/swagger-ui.html"
                 ).permitAll()
-                .requestMatchers("/api/usuario/me").authenticated()
-                .requestMatchers("/api/direccion/me", "/api/direccion/me/**").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/usuario", "/api/usuario/*").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/usuario/buscar").authenticated()
+                .requestMatchers(HttpMethod.GET, "/api/direccion/me", "/api/direccion/me/**", "/api/direccion/*").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/direccion/me").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/direccion/me/*").authenticated()
+                .requestMatchers(HttpMethod.DELETE, "/api/direccion/me/*").authenticated()
                 .anyRequest().hasAuthority("Administrador")
             )
             .sessionManagement(session -> session

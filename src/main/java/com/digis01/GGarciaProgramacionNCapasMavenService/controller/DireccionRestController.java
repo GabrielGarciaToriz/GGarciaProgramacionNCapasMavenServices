@@ -50,7 +50,7 @@ public class DireccionRestController {
     }
 
     @PostMapping("/me")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('Cliente')")
     public ResponseEntity<Result> AddMiDireccion(Authentication authentication, @RequestBody Direccion direccion) {
         Integer idUsuario = obtenerIdUsuarioAutenticado(authentication);
         if (idUsuario == null) {
@@ -62,7 +62,7 @@ public class DireccionRestController {
     }
 
     @PutMapping("/me/{idDireccion}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('Cliente')")
     public ResponseEntity<Result> ModifyMiDireccion(
             @PathVariable("idDireccion") int idDireccion,
             Authentication authentication,
@@ -77,7 +77,7 @@ public class DireccionRestController {
     }
 
     @DeleteMapping("/me/{idDireccion}")
-    @PreAuthorize("isAuthenticated()")
+    @PreAuthorize("hasAuthority('Cliente')")
     public ResponseEntity<Result> DeleteMiDireccion(
             @PathVariable("idDireccion") int idDireccion,
             Authentication authentication) {
@@ -118,7 +118,7 @@ public class DireccionRestController {
     })
 
     @GetMapping("/{idUsuario}")
-    @PreAuthorize("hasAuthority('Administrador')")
+    @PreAuthorize("hasAnyAuthority('Gerente','Administrador')")
     public ResponseEntity<Result> GetById(
             @Parameter(
                     description = "ID del usuario",
