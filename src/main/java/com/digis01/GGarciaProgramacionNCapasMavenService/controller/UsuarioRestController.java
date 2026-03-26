@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,9 +33,21 @@ public class UsuarioRestController {
     private UsuarioService usuarioService;
 
     // <editor-fold defaultstate="collapsed" desc="--- GET MAPPINGS / LECTURA ---">
+    @Operation(
+            summary = "Obtener perfil del usuario",
+            description = "Devuelve la información del perfil del usuario que ha iniciado sesión actualmente.",
+            security = @SecurityRequirement(name = "bearerAuth") // Útil si usas JWT u otro esquema de seguridad configurado
+    )
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Perfil obtenido correctamente"),
+        @ApiResponse(responseCode = "400", description = "Petición inválida o error al obtener el perfil"),
+        @ApiResponse(responseCode = "401", description = "No autorizado (Falta token o sesión)")
+    })
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<Result> GetMyProfile(Authentication authentication) {
+    public ResponseEntity<Result> GetMyProfile(
+            @Parameter(hidden = true) Authentication authentication) {
+
         Result result = usuarioService.getByUserName(authentication.getName());
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }

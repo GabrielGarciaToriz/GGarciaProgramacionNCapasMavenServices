@@ -83,6 +83,32 @@ public class UsuarioService {
         return result;
     }
 
+    public Result getByUserName(String userName) {
+        Result result = new Result();
+        try {
+            Usuario usuario = usuarioRepository.findByUserNameWithDetails(userName);
+            result.object = usuario;
+            result.correct = usuario != null;
+            if (!result.correct) {
+                result.errorMessage = "No se encontró el usuario autenticado.";
+            }
+        } catch (Exception e) {
+            manejarExcepcion(result, e);
+        }
+        return result;
+    }
+
+    public Integer obtenerIdPorUserName(String userName) {
+        return usuarioRepository.findByUserName(userName)
+                .map(Usuario::getIdUsuario)
+                .orElse(null);
+    }
+
+    public boolean esMismoUsuario(String userName, int idUsuario) {
+        Integer idAutenticado = obtenerIdPorUserName(userName);
+        return idAutenticado != null && idAutenticado == idUsuario;
+    }
+
     private Result envolverResultadoLista(java.util.function.Supplier<List<Usuario>> consulta) {
         Result result = new Result();
         try {

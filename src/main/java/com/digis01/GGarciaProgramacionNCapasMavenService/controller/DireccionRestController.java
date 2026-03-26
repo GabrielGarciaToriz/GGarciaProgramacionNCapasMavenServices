@@ -36,7 +36,6 @@ public class DireccionRestController {
     @Autowired
     private UsuarioService usuarioService;
 
-    // ===== ENDPOINTS DE AUTOSERVICIO (Usuario accede solo sus propias direcciones) =====
     @GetMapping("/me")
     @PreAuthorize("isAuthenticated()")
     public ResponseEntity<Result> GetMisDirecciones(Authentication authentication) {
@@ -90,7 +89,6 @@ public class DireccionRestController {
         return new ResponseEntity<>(result, result.correct ? HttpStatus.OK : HttpStatus.BAD_REQUEST);
     }
 
-    // ===== ENDPOINTS ADMINISTRATIVOS (Solo Administrador) =====
     @Operation(summary = "Obtener direcciones por Usuario",
             description = "Recupera todas las direcciones que pertenecen a un usuario especifico mediante su ID")
     @ApiResponses(value = {
