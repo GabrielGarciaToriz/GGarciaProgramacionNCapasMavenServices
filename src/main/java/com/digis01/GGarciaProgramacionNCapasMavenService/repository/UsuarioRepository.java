@@ -57,18 +57,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Integer> {
                                        @Param("apellidoMaterno") String apellidoMaterno, 
                                        @Param("idRol") int idRol);
 
-    @Query("""
-           SELECT u FROM Usuario u
-           LEFT JOIN FETCH u.rol
-           LEFT JOIN FETCH u.direcciones d
-           LEFT JOIN FETCH d.colonia c
-           LEFT JOIN FETCH c.municipio m
-           LEFT JOIN FETCH m.estado e
-           LEFT JOIN FETCH e.pais
-           WHERE u.userName = :userName
-           """)
-    Usuario findByUserNameWithDetails(@Param("userName") String userName);
-
     @Modifying
     @Query("UPDATE Usuario u SET u.estatus = :estatus WHERE u.idUsuario = :idUsuario")
     int cambiarEstatus(@Param("idUsuario") int idUsuario, @Param("estatus") int estatus);
