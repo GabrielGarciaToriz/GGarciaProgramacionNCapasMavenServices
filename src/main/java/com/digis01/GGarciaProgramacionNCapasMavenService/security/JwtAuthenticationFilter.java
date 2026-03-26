@@ -4,7 +4,6 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -60,14 +59,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             }
             filterChain.doFilter(request, response);
 
-            // AQUÍ ATRAPAMOS LOS ERRORES DEL TOKEN
         } catch (io.jsonwebtoken.ExpiredJwtException e) {
-            // El token ya pasó de la hora de caducidad
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"status\": 401, \"message\": \"Tu sesión ha expirado. Por favor, inicia sesión nuevamente.\"}");
         } catch (io.jsonwebtoken.JwtException | IllegalArgumentException e) {
-            // El token fue modificado, le faltan caracteres o es inválido
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             response.setContentType("application/json");
             response.getWriter().write("{\"status\": 401, \"message\": \"Token de acceso inválido o corrupto.\"}");

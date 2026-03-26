@@ -32,7 +32,6 @@ public class DireccionService {
     public Result addOrModifyDireccion(Direccion direccion, int idUsuario) {
         Result result = new Result();
         try {
-            // Solo instanciamos el usuario con su ID para establecer la llave foránea
             Usuario usuarioRef = new Usuario();
             usuarioRef.setIdUsuario(idUsuario); 
             direccion.setUsuario(usuarioRef);
